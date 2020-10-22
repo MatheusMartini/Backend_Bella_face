@@ -1,8 +1,8 @@
 const express = require('express');
-const { routes } = require('../app');
 const router = express.Router();
 const mysql = require("../mysql").pool;
 
+const { routes } = require('../app');
 
 // get products 
 router.get('/',(req, res, next)=>{
@@ -13,12 +13,12 @@ router.get('/',(req, res, next)=>{
             if(error){return res.status(500).send({ error: error})}
                 const response = {
                     quantidade: result.length,
-                    produtos: result.map(data =>{
+                    produtos: result.map(produto =>{
                         return{
-                            id_produto: data.id_produto,
-                            nome: data.nome,
-                            preco: data.preco,
-                            descricao: data.descricao,
+                            id_produto: produto.id_produto,
+                            nome: produto.nome,
+                            preco: produto.preco,
+                            descricao: produto.descricao,
                             request:{
                                 tipo: 'GET',
                                 descricao:"retorna todos os produtos com o metodo get"
