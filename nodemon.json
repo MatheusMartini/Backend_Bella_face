@@ -4,6 +4,8 @@
         "MYSQL_PASSWORD" : "root",
         "MYSQL_DATABASE" : "bella_face",
         "MYSQL_HOST" : "127.0.0.1",
-        "MYSQL_PORT" : 3306
+        "MYSQL_PORT" : 3306,
+
+        "JWT_KEY" : "token"
     }
 }
