@@ -8,17 +8,18 @@ const { routes } = require('../app');
 router.get('/',(req, res, next)=>{
     mysql.getConnection((error, conn)=>{
     if(error){return res.status(500).send({ error: error})} 
-        conn.query("SELECT * FROM produtos;",
+        conn.query("SELECT * FROM product;",
         (error, result, fields) => {
             if(error){return res.status(500).send({ error: error})}
                 const response = {
-                    quantidade: result.length,
-                    produtos: result.map(produto =>{
+                    quantity: result.length,
+                    product: result.map(product =>{
                         return{
-                            id_produto: produto.id_produto,
-                            nome: produto.nome,
-                            preco: produto.preco,
-                            descricao: produto.descricao,
+                            id_product: product.id_product,
+                            name: product.name,
+                            price: product.price,
+                            description: product.description,
+                            created_at: product.created_at,
                             request:{
                                 tipo: 'GET',
                                 descricao:"retorna todos os produtos com o metodo get"
@@ -37,18 +38,18 @@ router.post('/',(req, res, next)=>{
     mysql.getConnection((error, conn)=>{
         if(error){return res.status(500).send({ error: error})}
         conn.query(
-            "INSERT INTO produtos(nome, preco, descricao) VALUES (?,?,?)",
-            [req.body.nome, req.body.preco, req.body.descricao],
+            "INSERT INTO product(name, price, description) VALUES (?,?,?)",
+            [req.body.name, req.body.price, req.body.description],
             (error, result, fields) => {
                 conn.release();
                 if(error){return res.status(500).send({ error: error})} 
                 const response = {
-                    mensagem: "Produto inserido com sucesso!",
-                    produtoCriado: {
-                        id_produto: result.id_produto,
-                        nome: req.body.nome,
-                        preco: req.body.preco,
-                        descricao: req.body.descricao,
+                    message: "Produto inserido com sucesso!",
+                    created_product: {
+                        id_product: result.id_product,
+                        name: req.body.name,
+                        price: req.body.price,
+                        description: req.body.description,
                         request: {
                             tipo: "POST",
                             descricao:"produto criado com metodo POST"
@@ -62,24 +63,24 @@ router.post('/',(req, res, next)=>{
 });
 
 //get product by id
-router.get('/:id_produto',(req, res, next)=>{
+router.get('/:id_product',(req, res, next)=>{
     mysql.getConnection((error, conn)=>{
         if(error){return res.status(500).send({ error: error})} 
         conn.query(
-            "SELECT * FROM produtos WHERE id_produto = ?;",
-            [req.params.id_produto],
+            "SELECT * FROM product WHERE id_product = ?;",
+            [req.params.id_product],
             (error, result, fields) => {
                 if(error){return res.status(500).send({ error: error})} 
 
                 if(result.length == 0){
-                    return res.status(404).send({mensagem: "nao foi encontrado o produto com esse id"})
+                    return res.status(404).send({message: "nao foi encontrado o produto com esse id"})
                 }
                 const response = {
-                    produtos: {
-                        id_produto: result[0].id_produto,
-                        nome: result[0].nome,
-                        preco: result[0].preco,
-                        descricao: result[0].descricao,
+                    product: {
+                        id_product: result[0].id_product,
+                        name: result[0].name,
+                        price: result[0].price,
+                        description: result[0].description,
                             request:{
                                 tipo: 'GET',
                                 descricao: "retorna id especifico com o metodo GET"
@@ -98,19 +99,19 @@ router.patch('/',(req, res, next)=>{
         if(error){return res.status(500).send({ error: error})}
 
         conn.query(
-            "UPDATE produtos SET nome = ?, preco = ?, descricao = ? WHERE id_produto = ?",
-            [req.body.nome, req.body.preco, req.body.descricao, req.body.id_produto],
+            "UPDATE product SET name = ?, price = ?, description = ? WHERE id_product = ?",
+            [req.body.name, req.body.price, req.body.description, req.body.id_product],
             (error, result, fields) => {
                 conn.release();
                 if(error){return res.status(500).send({ error: error})} 
                 
                 const response = {
-                    mensagem: "Produto atualizado com sucesso!",
-                    produtoAtualizado: {
-                        id_produto: result.id_produto,
-                        nome: req.body.nome,
-                        preco: req.body.preco,
-                        descricao: req.body.descricao,
+                    message: "Produto atualizado com sucesso!",
+                    updated_product: {
+                        id_product: result.id_product,
+                        name: req.body.name,
+                        price: req.body.price,
+                        description: req.body.description,
                         request: {
                             tipo: "POST",
                             descricao:"produto atualizado com o metodo com POST"
@@ -128,7 +129,7 @@ router.delete('/',(req, res, next)=>{
         if(error){return res.status(500).send({ error: error})}
 
         conn.query(
-            "DELETE FROM produtos WHERE id_produto = ?",[req.body.id_produto],
+            "DELETE FROM product WHERE id_product = ?",[req.body.id_product],
             (error, result, fields) => {
                 conn.release();
                 if(error){return res.status(500).send({ error: error})} 
