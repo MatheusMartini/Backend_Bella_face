@@ -27,7 +27,7 @@ app.use((req, res, next) => {
 
 app.use("/produtos", rotaProdutos);
 app.use("/pedidos", rotaPedidos);
-app.use("/custumer", rotaUser);
+app.use("/", rotaUser);
 
 // rota nao definida
 app.use((req, res, next) => {
