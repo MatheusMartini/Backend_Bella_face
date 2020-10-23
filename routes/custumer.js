@@ -7,6 +7,7 @@ const custumerController = require("../controllers/custumerController");
 // add custumer
 router.post("/cadastro", custumerController.createUser)
 
+// verifica login
 router.post("/login", custumerController.verificationUser);
 
 module.exports = router;
