@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 
 const rotaProdutos = require("./routes/product");
 const rotaPedidos = require("./routes/order");
+const rotaUser = require("./routes/custumer");
 
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: false })); // seta apenas dados simples
@@ -26,6 +27,7 @@ app.use((req, res, next) => {
 
 app.use("/produtos", rotaProdutos);
 app.use("/pedidos", rotaPedidos);
+app.use("/custumer", rotaUser);
 
 // rota nao definida
 app.use((req, res, next) => {
