@@ -1,17 +1,18 @@
 const express = require("express");
 const router = express.Router();
 
+const login = require("../middleware/login");
 const orderController = require("../controllers/orderController")
 
 // return get pedidos
-router.get("/",orderController.getOrder );
+router.get("/", login.require, orderController.getOrder );
 //insert pedidos post
-router.post("/",orderController.postOrder);
+router.post("/", login.require, orderController.postOrder);
 //get pedidos by id
-router.get("/:order_id", orderController.getOrderById);
+router.get("/:order_id", login.require, orderController.getOrderById);
 // alter quantidade by id
-router.patch("/",orderController.alterQuantityById );
+router.patch("/", login.require, orderController.alterQuantityById );
 //delete pedido
-router.delete("/", orderController.delete);
+router.delete("/", login.require, orderController.delete);
 
 module.exports = router;
