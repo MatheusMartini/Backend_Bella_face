@@ -2,11 +2,13 @@ const express = require("express");
 const app = express();
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 
 const rotaProdutos = require("./routes/product");
 const rotaPedidos = require("./routes/order");
 const rotaUser = require("./routes/custumer");
 
+app.use(cors())
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: false })); // seta apenas dados simples
 app.use(bodyParser.json());
@@ -24,6 +26,7 @@ app.use((req, res, next) => {
   }
   next();
 });
+
 
 app.use("/produtos", rotaProdutos);
 app.use("/pedidos", rotaPedidos);
