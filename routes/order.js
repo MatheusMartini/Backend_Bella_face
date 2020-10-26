@@ -13,7 +13,7 @@ router.get("/:order_id", login.require, orderController.getOrderById);
 // alter quantidade by id
 router.patch("/", login.require, orderController.alterQuantityById );
 //delete pedido
-router.delete("/", login.require, orderController.delete);
+router.delete("/", orderController.delete);
 
 //conclui pedido conpleto
 router.post("/finalizapedido", login.require, orderController.postListOrder);
@@ -26,5 +26,7 @@ router.put("/alteratotal", orderController.updateTotalOrder);
 
 //altera comentario
 router.put("/comentario", orderController.setComment);
+
+router.post("/inpedido", orderController.postProdutoInPedido);
 
 module.exports = router;
