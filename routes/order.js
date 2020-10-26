@@ -23,7 +23,7 @@ router.put("/alteratotal", orderController.updateTotalOrder);
 router.put("/comentario", orderController.setComment);
 
 //insert pedido conpleto
-router.post("/", login.require, orderController.postPedido);
+router.post("/insertpedido", orderController.postPedido);
 
 
 module.exports = router;
