@@ -2,6 +2,7 @@ const mysql = require("../mysql").pool;
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
+//cria usuario
 exports.createUser = (req, res, next) =>{
     mysql.getConnection((err, conn) => {
         if(err){return res.status(500).send({ error: error})} 
@@ -34,7 +35,7 @@ exports.createUser = (req, res, next) =>{
         })
     });
 }
-
+//verifica usuario e gera token
 exports.verificationUser = (req, res, next) =>{
     mysql.getConnection((error, conn) => {
         if(error) {return res.status(500).send({ error: error})} 
