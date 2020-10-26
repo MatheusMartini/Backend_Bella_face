@@ -1,5 +1,6 @@
 const mysql = require("../mysql").pool;
 
+//get lista de pedidos
 exports.getOrder = (req, res, next) => {
     mysql.getConnection((error, conn)=>{
       if(error){return res.status(500).send({ error: error})} 
@@ -10,7 +11,7 @@ exports.getOrder = (req, res, next) => {
                       ordder: result.map(order =>{
                           return{
                             order_order_id: order.order_order_id,
-                              product_id: order.product_id,
+                              product_id_product: order.product_id_product,
                               quantity: order.quantity,
                               unit_price: order.unit_price,
                               total_price: order.total_price,
@@ -22,7 +23,7 @@ exports.getOrder = (req, res, next) => {
         )
     });
 }
-
+//get lista de pedidos by id
 exports.getOrderById = (req, res, next) => {
     mysql.getConnection((error, conn)=>{
             if(error){return res.status(500).send({ error: error})} 
@@ -55,6 +56,7 @@ exports.getOrderById = (req, res, next) => {
     });
 }
 
+//altera quantidade buscando pelo id
 exports.alterQuantityById = (req, res, next) => {
     mysql.getConnection((error, conn)=>{
            if(error){return res.status(500).send({ error: error})}
@@ -69,7 +71,7 @@ exports.alterQuantityById = (req, res, next) => {
                    const response = {
                        mensagem: "Produto atualizado com sucesso!",
                        produtoAtualizado: {
-                           product_id: req.body.product_id,
+                        product_id_product: req.body.product_id_product,
                            quantity: req.body.quantity,
                            request: {
                                tipo: "POST",
@@ -87,7 +89,7 @@ exports.delete = (req, res, next) => {
  mysql.getConnection((error, conn)=>{
         if(error){return res.status(500).send({ error: error})}
         conn.query(
-            "DELETE FROM order_has_product WHERE product_product_id = ?",[req.body.product_product_id],
+            "DELETE FROM order_has_product WHERE product_id_product = ?",[req.body.product_id_product],
             (error, result, fields) => {
                 conn.release();
                 if(error){return res.status(500).send({ error: error})} 
@@ -99,58 +101,7 @@ exports.delete = (req, res, next) => {
     });
 }
 
-// post pedido
-exports.postOrder = (req, res, next) => {
-    mysql.getConnection((error, conn)=>{
-        if(error){return res.status(500).send({ error: error})}
-        conn.query(
-            "INSERT INTO `order` (`order_id`, `custumer_id`, `total_order`, `created_at`, `comments`) VALUES ( ?, ?, ?, CURRENT_TIMESTAMP, ?);",
-            [req.body.order_id, req.body.custumer_id, req.body.total_order, req.body.comments],
-            (error, result, fields) => {
-                conn.release();
-                if(error){return res.status(500).send({ error: error})} 
-                const response = {
-                    mensagem: "Pedido concluido com sucesso!",
-                    pedido: {
-                        order_id: req.body.order_id,
-                        custumer_id: req.body.custumer_id,
-                        total_order: result.total_order,
-                        created_at: req.body.created_at,
-                        comments:req.body.comments
-                    }
-                }
-                res.status(201).send({response});
-            }
-        )
-    })
-}
-// post lista dos pedidos
-exports.postListOrder = (req, res, next) => {
-    mysql.getConnection((error, conn)=>{
-        if(error){return res.status(500).send({ error: error})}
-        conn.query(
-            "INSERT INTO `order_has_product` (`order_order_id`, `product_id_product`, `quantity`, `unit_price`, `total_price`, `creat_data`) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)",
-            [req.body.order_order_id, req.body.product_id_product, req.body.quantity, req.body.unit_price, req.body.total_price],
-            (error, result, fields) => {
-                conn.release();
-                if(error){return res.status(500).send({ error: error})} 
-                const response = {
-                    mensagem: "Pedido concluido com sucesso!",
-                    pedido: {
-                        order_order_id: req.body.order_order_id,
-                        product_id_product: req.body.product_id_product,
-                        quantity: result.quantity,
-                        unit_price: req.body.unit_price,
-                        total_price:req.body.total_price,
-                    }
-                }
-                res.status(201).send(response);
-            }
-        )
-    })
-}
-
-//update total_order
+//update total_order na tabela order
 exports.updateTotalOrder = (req, res, next) => {
     mysql.getConnection((error, conn)=>{
         if(error){return res.status(500).send({ error: error})}
@@ -172,7 +123,7 @@ exports.updateTotalOrder = (req, res, next) => {
     })
 }
 
-//seta comentario 
+//seta comentario na tabela order
 exports.setComment = (req, res, next) => {
     mysql.getConnection((error, conn)=>{
         if(error){return res.status(500).send({ error: error})}
@@ -194,26 +145,27 @@ exports.setComment = (req, res, next) => {
     })
 }
 
-//post produto pedido
-exports.postProdutoInPedido = (req, res, next) => {
+// post pedido passando atributos do pedido
+exports.postPedido = (req, res, next) => {
     mysql.getConnection((error, conn)=>{
         if(error){return res.status(500).send({ error: error})}
         conn.query(
-            "INSERT INTO `order_has_product` (`order_order_id`, `product_id_product`, `quantity`, `unit_price`, `total_price`) VALUES ( ?, ?, ?, ?, ?);",
+            "INSERT INTO `order_has_product` (`order_order_id`, `product_id_product`, `quantity`, `unit_price`, `total_price`, `creat_data`) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)",
             [req.body.order_order_id, req.body.product_id_product, req.body.quantity, req.body.unit_price, req.body.total_price],
             (error, result, fields) => {
                 conn.release();
                 if(error){return res.status(500).send({ error: error})} 
                 const response = {
-                    mensagem: "produto inserido com sucesso!",
-                    produto: {
+                    mensagem: "Pedido concluido com sucesso!",
+                    pedido: {
+                        order_order_id: req.body.order_order_id,
                         product_id_product: req.body.product_id_product,
-                        quantity: req.body.quantity,
-                        unit_price: result.unit_price,
-                        total_price: req.body.total_price,
+                        quantity: result.quantity,
+                        unit_price: req.body.unit_price,
+                        total_price:req.body.total_price,
                     }
                 }
-                res.status(201).send({response});
+                res.status(201).send(response);
             }
         )
     })
