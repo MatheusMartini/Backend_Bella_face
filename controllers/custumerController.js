@@ -39,7 +39,6 @@ exports.verificationUser = (req, res, next) =>{
     mysql.getConnection((error, conn) => {
         if(error) {return res.status(500).send({ error: error})} 
         const query = "SELECT * FROM custumer WHERE login = ?";
-
         conn.query(query,[req.body.login],(error, results, fields) => {
             conn.release();
             if(error) {return res.status(500).send({ error: error})} 
@@ -48,7 +47,7 @@ exports.verificationUser = (req, res, next) =>{
             }
             bcrypt.compare(req.body.password, results[0].password, (err, result) => {
                 if(err){
-                    return res.status(401).send({ message: "falha na autenticação"});
+                    return res.status(401).send({ message: "falha na autenticação da senha"});
                 }
                 if(result){
                     const token = jwt.sign({
