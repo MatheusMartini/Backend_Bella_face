@@ -15,4 +15,16 @@ router.patch("/", login.require, orderController.alterQuantityById );
 //delete pedido
 router.delete("/", login.require, orderController.delete);
 
+//conclui pedido conpleto
+router.post("/finalizapedido", login.require, orderController.postListOrder);
+
+//cria pedido conpleto
+router.post("/criapedido", login.require, orderController.delete);
+
+//altera total da compra
+router.put("/alteratotal", orderController.updateTotalOrder);
+
+//altera comentario
+router.put("/comentario", orderController.setComment);
+
 module.exports = router;
