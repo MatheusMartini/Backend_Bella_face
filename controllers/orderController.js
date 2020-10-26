@@ -82,16 +82,17 @@ exports.alterQuantityById = (req, res, next) => {
     });
 }
 
+//deletar produto pedido
 exports.delete = (req, res, next) => {
  mysql.getConnection((error, conn)=>{
         if(error){return res.status(500).send({ error: error})}
         conn.query(
-            "DELETE FROM order_has_product WHERE order_order_id = ?",[req.body.order_order_id],
+            "DELETE FROM order_has_product WHERE product_product_id = ?",[req.body.product_product_id],
             (error, result, fields) => {
                 conn.release();
                 if(error){return res.status(500).send({ error: error})} 
                 const response = {
-                    mensagem: 'pedido deletado com sucesso!',
+                    mensagem: 'produto do pedido deletado com sucesso!',
                 }
             return res.status(202).send(response);
         });
@@ -188,6 +189,31 @@ exports.setComment = (req, res, next) => {
                     }
                 }
                 res.status(201).send(response);
+            }
+        )
+    })
+}
+
+//post produto pedido
+exports.postProdutoInPedido = (req, res, next) => {
+    mysql.getConnection((error, conn)=>{
+        if(error){return res.status(500).send({ error: error})}
+        conn.query(
+            "INSERT INTO `order_has_product` (`order_order_id`, `product_id_product`, `quantity`, `unit_price`, `total_price`) VALUES ( ?, ?, ?, ?, ?);",
+            [req.body.order_order_id, req.body.product_id_product, req.body.quantity, req.body.unit_price, req.body.total_price],
+            (error, result, fields) => {
+                conn.release();
+                if(error){return res.status(500).send({ error: error})} 
+                const response = {
+                    mensagem: "produto inserido com sucesso!",
+                    produto: {
+                        product_id_product: req.body.product_id_product,
+                        quantity: req.body.quantity,
+                        unit_price: result.unit_price,
+                        total_price: req.body.total_price,
+                    }
+                }
+                res.status(201).send({response});
             }
         )
     })
